@@ -37,8 +37,8 @@ $(BINDIR)/%: %
 
 # Generate the complete configuration files from separate files.
 
-$(TABLES_DEST): $(TABLES_SRC) $(TABLES_SUBS) $(BINDIR)/tsxml
-	$(call LOG,[GEN] $(notdir $@)) $(TSXML) --merge $(TABLES_SRC) $(TABLES_SUBS) --sort _tables --sort _descriptors --uncomment -o $@
+$(TABLES_DEST):
+	$(call LOG,[GEN] $(notdir $@)) touch $@
 
 $(NAMES_DEST): $(NAMES_SRC)
 	$(call LOG,[GEN] $(notdir $@)) $(PYTHON) $(SCRIPTSDIR)/build-dtv-names.py $@ $^
