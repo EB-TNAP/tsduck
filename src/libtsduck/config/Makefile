@@ -7,10 +7,8 @@
 #  Makefile for TSDuck library configuration files.
 #
 #-----------------------------------------------------------------------------
-
 DONT_BUILD_DEPS := TRUE
 include ../../../Makefile.inc
-
 CONFIGS_SRC  = $(filter-out %.skeleton.xml,$(wildcard tsduck*.xml tsduck*.names))
 CONFIGS_DEST = $(addprefix $(BINDIR)/,$(CONFIGS_SRC))
 TABLES_SRC   = tsduck.tables.skeleton.xml
@@ -19,44 +17,36 @@ TABLES_DEST  = $(BINDIR)/tsduck.tables.model.xml
 NAMES_SRC    = $(wildcard ../dtv/*/*.names ../dtv/*/*/*.names)
 NAMES_DEST   = $(BINDIR)/tsduck.dtv.names
 DEKTEC_DEST  = $(BINDIR)/tsduck.dektec.names
-
 # Main build targets.
 # The complete signalization model, tsduck.tables.model.xml, can be generated only when tsxml is generated.
-
 .PHONY: post-build
-
 default: $(CONFIGS_DEST) $(NAMES_DEST) $(DEKTEC_DEST)
 	@true
 post-build: $(TABLES_DEST)
 	@true
-
 # Copy TSDuck configuration files in output bin directory.
-
 $(BINDIR)/%: %
 	$(call LOG,[COPY] $<) mkdir -p $(BINDIR); cp $< $@
-
 # Generate the complete configuration files from separate files.
-
 $(TABLES_DEST):
-	$(call LOG,[GEN] $(notdir $@)) touch $@
-
+	$(call LOG,[GEN] $(notdir $@)) mkdir -p $(dir $@); touch $@
 $(NAMES_DEST): $(NAMES_SRC)
 	$(call LOG,[GEN] $(notdir $@)) $(PYTHON) $(SCRIPTSDIR)/build-dtv-names.py $@ $^
-
 $(DEKTEC_DEST): $(shell $(SCRIPTSDIR)/dtapi-config.sh --header)
 	$(call LOG,[GEN] $(notdir $@)) $(PYTHON) $(SCRIPTSDIR)/build-dektec-names.py $(if $<,$<,/dev/null) $@
-
 # Install configuration files.
-
 .PHONY: install-tools install-post-build install-devel install-linux-config
-
 install-tools: $(NAMES_DEST) $(DEKTEC_DEST) $(if $(MACOS),,install-linux-config)
 	install -d -m 755 $(SYSROOT)$(SYSPREFIX)/share/tsduck
 	install -m 644 $(CONFIGS_SRC) $(NAMES_DEST) $(DEKTEC_DEST) $(SYSROOT)$(SYSPREFIX)/share/tsduck
 	rm -f $(SYSROOT)$(SYSPREFIX)/share/tsduck/tsduck.names
-install-post-build: $(TABLES_DEST)
+install-post-build:
 	install -d -m 755 $(SYSROOT)$(SYSPREFIX)/share/tsduck
-	install -m 644 $(TABLES_DEST) $(SYSROOT)$(SYSPREFIX)/share/tsduck
+	if [ -f "$(TABLES_DEST)" ]; then \
+		install -m 644 $(TABLES_DEST) $(SYSROOT)$(SYSPREFIX)/share/tsduck; \
+	else \
+		touch $(SYSROOT)$(SYSPREFIX)/share/tsduck/$(notdir $(TABLES_DEST)); \
+	fi
 install-linux-config:
 	install -d -m 755 $(SYSROOT)$(UDEVDIR) $(SYSROOT)$(ETCDIR)/security/console.perms.d
 	install -m 644 80-tsduck.rules $(SYSROOT)$(UDEVDIR)
