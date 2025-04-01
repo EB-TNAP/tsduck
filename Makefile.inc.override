@@ -1,0 +1,3 @@
+# Cross-compilation settings
+CROSS = 1
+NODOC = 1
