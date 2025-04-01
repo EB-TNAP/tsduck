@@ -1,3 +1,11 @@
 # Cross-compilation settings
 CROSS = 1
 NODOC = 1
+RELEASE=1 
+PREFIX=/usr 
+SYSROOT=${STAGING_DIR_TARGET} 
+NO_VATEK=1 
+NO_GITHUB=1 
+NO_MPEG2DEC=1 
+NO_PCSC=1 
+
