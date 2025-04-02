@@ -57,6 +57,7 @@ install-tools: $(NAMES_DEST) $(DEKTEC_DEST) $(if $(MACOS),,install-linux-config)
 	install -d -m 755 $(SYSROOT)$(SYSPREFIX)/share/tsduck
 	install -m 644 $(CONFIGS_SRC) $(NAMES_DEST) $(DEKTEC_DEST) $(SYSROOT)$(SYSPREFIX)/share/tsduck
 	rm -f $(SYSROOT)$(SYSPREFIX)/share/tsduck/tsduck.names
+
 install-post-build:
 	install -d -m 755 $(SYSROOT)$(SYSPREFIX)/share/tsduck
 	@if [ -f "$(TABLES_DEST)" ]; then \
@@ -70,6 +71,7 @@ install-linux-config:
 	install -d -m 755 $(SYSROOT)$(UDEVDIR) $(SYSROOT)$(ETCDIR)/security/console.perms.d
 	install -m 644 80-tsduck.rules $(SYSROOT)$(UDEVDIR)
 	install -m 644 80-tsduck.perms $(SYSROOT)$(ETCDIR)/security/console.perms.d
+
 install-devel:
 	install -d -m 755 $(SYSROOT)$(SYSPREFIX)/share/pkgconfig
 	sed -e 's|{{VERSION}}|$(shell $(GET_TSDUCK_VERSION) --dotted)|g' \
