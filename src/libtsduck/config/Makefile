@@ -15,7 +15,7 @@ CONFIGS_SRC  = $(filter-out %.skeleton.xml,$(wildcard tsduck*.xml tsduck*.names)
 CONFIGS_DEST = $(addprefix $(BINDIR)/,$(CONFIGS_SRC))
 TABLES_SRC   = tsduck.tables.skeleton.xml
 TABLES_SUBS  = $(wildcard ../dtv/tables/*/*.xml ../dtv/descriptors/*/*.xml)
-#TABLES_DEST  = $(BINDIR)/tsduck.tables.model.xml
+TABLES_DEST  = $(BINDIR)/tsduck.tables.model.xml
 ifneq ("$(wildcard $(TABLES_DEST))","")
 INSTALL_CONFIG += $(TABLES_DEST)
 endif
