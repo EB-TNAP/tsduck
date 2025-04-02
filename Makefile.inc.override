@@ -1,3 +1,4 @@
 # Cross-compilation settings
 CROSS = 1
 NODOC = 1
+NODEKTEC=1
